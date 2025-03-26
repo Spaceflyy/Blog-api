@@ -1,12 +1,9 @@
 const { Router } = require("express");
+const { addUser, getAllUsers } = require("../controllers/userController");
 const router = Router();
 //NEEDS ROUTERS FOR
-router.post("/", (req, res) => {
-	//creates a user
-});
-router.get("/", (req, res) => {
-	//gets all users
-});
+router.post("/", addUser);
+router.get("/", getAllUsers);
 
 router.get("/:userId", (req, res) => {
 	//get specific user

@@ -5,6 +5,7 @@ const userRouter = require("./routers/userRouter");
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
 app.use("/users", userRouter);
 
 app.listen(3000, () => {
