@@ -15,3 +15,27 @@ exports.addUser = async (req, res, next) => {
 exports.getAllUsers = async (req, res) => {
 	return res.send(await db.getUsers());
 };
+
+exports.getUserById = async (req, res) => {
+	const { userId } = req.params;
+	return res.send(await db.getUserId(Number(userId)));
+};
+
+exports.deleteUserById = async (req, res) => {
+	const { userId } = req.params;
+	await db.deleteUser(Number(userId));
+};
+
+exports.updateUser = async (req, res) => {
+	const { firstname, lastname, username, password, isAuthor } = req.body;
+	const { userId } = req.params;
+	return res.send(firstname);
+	// await db.editUser(
+	// 	Number(userId),
+	// 	firstname,
+	// 	lastname,
+	// 	username,
+	// 	password,
+	// 	isAuthor
+	// );
+};

@@ -24,3 +24,27 @@ exports.getUsers = async () => {
 exports.deleteUser = async (userId) => {
 	await prisma.user.delete({ where: { id: userId } });
 };
+
+exports.getUserId = async (userId) => {
+	return await prisma.user.findUnique({ where: { id: userId } });
+};
+
+exports.editUser = async (
+	userId,
+	firstname,
+	lastname,
+	username,
+	password,
+	isAuthor
+) => {
+	await prisma.user.update({
+		where: { id: userId },
+		data: {
+			firstname: firstname,
+			lastname: lastname,
+			username: username,
+			password: password,
+			isAuthor: isAuthor,
+		},
+	});
+};
