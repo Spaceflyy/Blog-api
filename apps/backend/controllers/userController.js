@@ -1,5 +1,6 @@
 const db = require("../database/queries");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 exports.addUser = async (req, res, next) => {
 	const { firstname, lastname, username, password, isAuthor } = req.body;
 	try {
@@ -7,7 +8,6 @@ exports.addUser = async (req, res, next) => {
 		await db.createUser(firstname, lastname, username, hashedPassword, isAuthor);
 		res.end();
 	} catch (error) {
-		console.error(error);
 		next(error);
 	}
 };
@@ -29,13 +29,38 @@ exports.deleteUserById = async (req, res) => {
 exports.updateUser = async (req, res) => {
 	const { firstname, lastname, username, password, isAuthor } = req.body;
 	const { userId } = req.params;
-	return res.send(firstname);
-	// await db.editUser(
-	// 	Number(userId),
-	// 	firstname,
-	// 	lastname,
-	// 	username,
-	// 	password,
-	// 	isAuthor
-	// );
+
+	try {
+		const hashedPassword = await bcrypt.hash(password, 10);
+		await db.editUser(
+			Number(userId),
+			firstname,
+			lastname,
+			username,
+			hashedPassword,
+			isAuthor
+		);
+		res.end();
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
+};
+
+exports.userLogin = async (req, res, next) => {
+	const { username, password } = req.body;
+	const user = await db.getUserByUsername(username);
+
+	if (!user) {
+		return res.status(400).json({ error: "Incorrect Username" });
+	}
+
+	const match = await bcrypt.compare(password, user.password);
+	if (!match) {
+		return res.status(400).json({ error: "Incorrect Password" });
+	}
+
+	jwt.sign({ user }, "secretkey", (err, token) => {
+		res.json({ token });
+	});
 };
