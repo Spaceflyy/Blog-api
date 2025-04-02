@@ -1,6 +1,7 @@
 const db = require("../database/queries");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+
+const { signToken } = require("./authController");
 exports.addUser = async (req, res, next) => {
 	const { firstname, lastname, username, password, isAuthor } = req.body;
 	try {
@@ -47,7 +48,7 @@ exports.updateUser = async (req, res) => {
 	}
 };
 
-exports.userLogin = async (req, res, next) => {
+exports.userLogin = async (req, res) => {
 	const { username, password } = req.body;
 	const user = await db.getUserByUsername(username);
 
@@ -60,7 +61,5 @@ exports.userLogin = async (req, res, next) => {
 		return res.status(400).json({ error: "Incorrect Password" });
 	}
 
-	jwt.sign({ user }, "secretkey", (err, token) => {
-		res.json({ token });
-	});
+	signToken(user);
 };
