@@ -1,7 +1,6 @@
 const db = require("../database/queries");
 const bcrypt = require("bcryptjs");
 
-const { signToken } = require("./authController");
 exports.addUser = async (req, res, next) => {
 	const { firstname, lastname, username, password, isAuthor } = req.body;
 	try {
@@ -46,20 +45,4 @@ exports.updateUser = async (req, res) => {
 		console.error(error);
 		next(error);
 	}
-};
-
-exports.userLogin = async (req, res) => {
-	const { username, password } = req.body;
-	const user = await db.getUserByUsername(username);
-
-	if (!user) {
-		return res.status(400).json({ error: "Incorrect Username" });
-	}
-
-	const match = await bcrypt.compare(password, user.password);
-	if (!match) {
-		return res.status(400).json({ error: "Incorrect Password" });
-	}
-
-	signToken(user);
 };

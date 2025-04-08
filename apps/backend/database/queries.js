@@ -23,7 +23,9 @@ exports.getUsers = async () => {
 };
 
 exports.getUserByUsername = async (username) => {
-	return prisma.user.findUnique({ where: { username: username } });
+	return prisma.user.findUnique({
+		where: { username: username },
+	});
 };
 exports.deleteUser = async (userId) => {
 	await prisma.user.delete({ where: { id: userId } });
