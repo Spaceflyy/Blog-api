@@ -5,7 +5,7 @@ const userRouter = require("./routers/userRouter");
 const authRouter = require("./routers/authRouter");
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-
+app.use(cors({ origin: "http://localhost:5173" }));
 app.use("/users", userRouter);
 app.use("/auth", authRouter);
 

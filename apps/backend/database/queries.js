@@ -2,6 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 //////////USER QUERIES///////////////////////////////
 exports.createUser = async (
+	email,
 	firstname,
 	lastname,
 	username,
@@ -10,6 +11,7 @@ exports.createUser = async (
 ) => {
 	await prisma.user.create({
 		data: {
+			email: email,
 			firstname: firstname,
 			lastname: lastname,
 			username: username,
@@ -24,7 +26,7 @@ exports.getUsers = async () => {
 
 exports.getUserByUsername = async (username) => {
 	return prisma.user.findUnique({
-		where: { username: username },
+		where: { email: username },
 	});
 };
 exports.deleteUser = async (userId) => {
