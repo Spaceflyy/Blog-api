@@ -2,27 +2,39 @@ const jwt = require("jsonwebtoken");
 const db = require("../database/queries");
 const bcrypt = require("bcryptjs");
 
-exports.deleteToken = (req, res) => {};
+exports.deleteToken = (req, res) => {
+	refreshTokens = refreshTokens.filter((token) => token !== req.body.token);
+	return res.status(204).json({ message: "Logout successful" });
+};
+let refreshTokens = [];
+exports.getNewToken = async (req, res) => {
+	const refreshToken = req.cookies.ACCESS_TOKEN;
+	console.log(refreshToken);
+	const refreshTokens = await db.getTokens();
+	const databaseTokens = refreshTokens.map(function (obj) {
+		return obj.token;
+	});
 
-exports.getNewToken = (req, res) => {
-	const refreshToken = req.body.token;
-	// if (localStorage.getItem("token") === null) {
+	// if (refreshToken === undefined) {
 	// 	return res.status(401).json({ message: "User Unauthorized" });
 	// }
-	// if (localStorage.getItem("token") !== refreshToken) {
-	// 	res.status(403).json({ message: "Forbidden" });
+
+	// if (!databaseTokens.includes(refreshToken)) {
+	// 	return res.status(403).json({ message: "Forbidden" });
 	// }
 
-	jwt.verify(refreshToken, process.env.REFRESH_SECRET, (err, user) => {
-		if (err) {
-			return res.send().Status(403);
-		}
-		const accessToken = generateAccessToken({ name: user.username });
-		res.json({ accessToken });
-	});
+	res.json({ databaseTokens, refreshToken });
+
+	// jwt.verify(refreshToken, process.env.REFRESH_SECRET, (err, user) => {
+	// 	if (err) {
+	// 		return res.sendStatus(403);
+	// 	}
+	// 	const accessToken = generateAccessToken({ username: user.username });
+	// 	res.json({ accessToken });
+	// });
 };
 
-exports.userLogin = async (req, res) => {
+exports.userLogin = async (req, res, next) => {
 	const { username, password } = req.body;
 	const user = await db.getUserByUsername(username);
 
@@ -36,13 +48,40 @@ exports.userLogin = async (req, res) => {
 	}
 
 	const accessToken = generateAccessToken(user);
-	const refreshToken = jwt.sign(user, process.env.REFRESH_SECRET);
+	const refreshToken = jwt.sign(user, process.env.REFRESH_SECRET, {
+		expiresIn: "30d",
+	});
 
-	res.json({ accessToken, refreshToken });
+	// try {
+	// 	const hashedToken = await bcrypt.hash(refreshToken, 10);
+	// 	await db.addToken(user.id, hashedToken);
+	// } catch (error) {
+	// 	return res.status(400).json({ error: "Token already exists" });
+	// }
+
+	res.cookie("REFRESH_TOKEN", refreshToken, {
+		httpOnly: true,
+		secure: true,
+		sameSite: "strict",
+		path: "/token",
+		maxAge: 30 * 24 * 60 * 60 * 1000,
+	});
+
+	res
+		.cookie("ACCESS_TOKEN", accessToken, {
+			httpOnly: true,
+			secure: true,
+			sameSite: "strict",
+			maxAge: 60 * 60 * 1000,
+		})
+		.status(200)
+		.json({
+			message: "ok",
+		});
 };
 
 const generateAccessToken = (user) => {
-	return jwt.sign(user, process.env.TOKEN_SECRET, { expiresIn: "15s" });
+	return jwt.sign(user, process.env.TOKEN_SECRET, { expiresIn: "1h" });
 };
 
 exports.verifyToken = (req, res, next) => {

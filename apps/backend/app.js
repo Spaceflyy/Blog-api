@@ -3,9 +3,17 @@ const cors = require("cors");
 const app = express();
 const userRouter = require("./routers/userRouter");
 const authRouter = require("./routers/authRouter");
-app.use(express.urlencoded({ extended: false }));
+const cookieParser = require("cookie-parser");
+
+app.use(
+	cors({
+		origin: ["http://localhost:5173"],
+		credentials: true,
+	})
+);
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cookieParser());
 app.use("/users", userRouter);
 app.use("/auth", authRouter);
 
