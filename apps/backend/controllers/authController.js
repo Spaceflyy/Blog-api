@@ -3,35 +3,35 @@ const db = require("../database/queries");
 const bcrypt = require("bcryptjs");
 
 exports.deleteToken = (req, res) => {
-	refreshTokens = refreshTokens.filter((token) => token !== req.body.token);
+	refreshTokens = refreshTokens.filter(
+		(token) => token !== req.cookies["REFRESH_TOKEN"]
+	);
 	return res.status(204).json({ message: "Logout successful" });
 };
-let refreshTokens = [];
+
 exports.getNewToken = async (req, res) => {
-	const refreshToken = req.cookies.ACCESS_TOKEN;
-	console.log(refreshToken);
-	const refreshTokens = await db.getTokens();
-	const databaseTokens = refreshTokens.map(function (obj) {
-		return obj.token;
+	const refreshToken = req.cookies["REFRESH_TOKEN"];
+	const dbResult = await db.getTokens();
+	const refreshTokens = dbResult.map(function (token) {
+		return token["token"];
 	});
+	console.log(refreshToken);
+	if (refreshToken === undefined) {
+		return res.status(401).json({ message: "User Unauthorized" });
+	}
 
-	// if (refreshToken === undefined) {
-	// 	return res.status(401).json({ message: "User Unauthorized" });
-	// }
+	if (!refreshTokens.includes(refreshToken)) {
+		return res.status(403).json({ message: "Forbidden" });
+	}
 
-	// if (!databaseTokens.includes(refreshToken)) {
-	// 	return res.status(403).json({ message: "Forbidden" });
-	// }
+	jwt.verify(refreshToken, process.env.REFRESH_SECRET, (err, user) => {
+		if (err) {
+			return res.status(403).json({ message: "Invalid Token" });
+		}
+		const accessToken = generateAccessToken({ username: user.username });
 
-	res.json({ databaseTokens, refreshToken });
-
-	// jwt.verify(refreshToken, process.env.REFRESH_SECRET, (err, user) => {
-	// 	if (err) {
-	// 		return res.sendStatus(403);
-	// 	}
-	// 	const accessToken = generateAccessToken({ username: user.username });
-	// 	res.json({ accessToken });
-	// });
+		return res.status(200).json({ accessToken });
+	});
 };
 
 exports.userLogin = async (req, res, next) => {
@@ -52,18 +52,16 @@ exports.userLogin = async (req, res, next) => {
 		expiresIn: "30d",
 	});
 
-	// try {
-	// 	const hashedToken = await bcrypt.hash(refreshToken, 10);
-	// 	await db.addToken(user.id, hashedToken);
-	// } catch (error) {
-	// 	return res.status(400).json({ error: "Token already exists" });
-	// }
-
+	try {
+		await db.addToken(user.id, refreshToken);
+	} catch (error) {
+		return res.status(400).json({ error: "Token already exists" });
+	}
 	res.cookie("REFRESH_TOKEN", refreshToken, {
 		httpOnly: true,
 		secure: true,
 		sameSite: "strict",
-		path: "/token",
+		path: "/auth/token",
 		maxAge: 30 * 24 * 60 * 60 * 1000,
 	});
 
@@ -75,9 +73,7 @@ exports.userLogin = async (req, res, next) => {
 			maxAge: 60 * 60 * 1000,
 		})
 		.status(200)
-		.json({
-			message: "ok",
-		});
+		.json({ accessToken });
 };
 
 const generateAccessToken = (user) => {
@@ -85,6 +81,7 @@ const generateAccessToken = (user) => {
 };
 
 exports.verifyToken = (req, res, next) => {
+	// console.log(req.headers["authorization"])
 	const bearerHeader = req.headers["authorization"];
 	const token = bearerHeader && bearerHeader.split(" ")[1];
 
@@ -98,6 +95,7 @@ exports.verifyToken = (req, res, next) => {
 		}
 
 		req.user = user;
+
 		next();
 	});
 };

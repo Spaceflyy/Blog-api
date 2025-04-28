@@ -11,6 +11,17 @@ const LoginForm = () => {
 
 		setInfo({ username: email, password: password });
 	};
+	const handleClick = async (e) => {
+		e.preventDefault();
+		const response = await fetch("http://localhost:3000/auth/token", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			credentials: "include",
+		}).then(async function (response) {
+			return { response: await response.json(), status: response.status };
+		});
+		console.log(response);
+	};
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
@@ -19,14 +30,12 @@ const LoginForm = () => {
 			headers: { "Content-Type": "application/json" },
 			credentials: "include",
 			body: JSON.stringify({ username: info.username, password: info.password }),
-		})
-			.then(function (response) {
-				return response.json();
-			})
-			.then(function (response) {
-				return response;
-			});
-		if (response.message === "ok") {
+		}).then(async function (response) {
+			return { response: await response.json(), status: response.status };
+		});
+		console.log(response);
+
+		if (response.status === 200) {
 			navigate("/posts");
 		} else {
 			setInfo({ username: "", password: "" });
@@ -55,6 +64,8 @@ const LoginForm = () => {
 				/>
 				<button>Submit</button>
 			</form>
+
+			<button onClick={handleClick}></button>
 		</>
 	);
 };
