@@ -1,0 +1,19 @@
+
+nav, nav div {
+    display: flex;
+}
+
+nav
+{
+ 
+    justify-content: space-between;
+    background-color: rgba(63, 61, 61, 0.568);
+    padding: 1rem;
+}
+nav div {
+    gap:1rem;
+}
+a
+{
+    color: white;
+}

@@ -65,15 +65,7 @@ exports.userLogin = async (req, res, next) => {
 		maxAge: 30 * 24 * 60 * 60 * 1000,
 	});
 
-	res
-		.cookie("ACCESS_TOKEN", accessToken, {
-			httpOnly: true,
-			secure: true,
-			sameSite: "strict",
-			maxAge: 60 * 60 * 1000,
-		})
-		.status(200)
-		.json({ accessToken });
+	res.status(200).json({ accessToken });
 };
 
 const generateAccessToken = (user) => {
@@ -81,7 +73,6 @@ const generateAccessToken = (user) => {
 };
 
 exports.verifyToken = (req, res, next) => {
-	// console.log(req.headers["authorization"])
 	const bearerHeader = req.headers["authorization"];
 	const token = bearerHeader && bearerHeader.split(" ")[1];
 
