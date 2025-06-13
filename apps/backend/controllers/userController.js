@@ -53,3 +53,11 @@ exports.updateUser = async (req, res) => {
 		next(error);
 	}
 };
+
+exports.getUser = (req, res) => {
+	try {
+		res.json(req.user);
+	} catch (error) {
+		res.status(500).json({ error: "Unable to retrieve user" });
+	}
+};
