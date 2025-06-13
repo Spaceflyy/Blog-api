@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { refresh, login } from "../../api/auth";
+import { login } from "../../api/auth";
 import { Link } from "react-router-dom";
 import Styles from "./loginForm.module.css";
 import PersonIcon from "@mui/icons-material/Person";
@@ -15,15 +15,10 @@ const LoginForm = () => {
 
 		setInfo({ username: email, password: password });
 	};
-	const handleClick = async (e) => {
-		e.preventDefault();
-		await refresh();
-	};
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
 		const response = await login(info);
-		console.log(response);
 
 		if (response.status === 200) {
 			navigate("/posts");

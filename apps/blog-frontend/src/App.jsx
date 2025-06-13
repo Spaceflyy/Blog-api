@@ -1,4 +1,3 @@
-
 import { Outlet } from "react-router-dom";
 import Header from "./componenets/Header/Header.jsx";
 
@@ -9,7 +8,6 @@ import Header from "./componenets/Header/Header.jsx";
 function App() {
 	return (
 		<>
-			<Header />
 			<Outlet />
 		</>
 	);
