@@ -13,7 +13,7 @@ export const login = async (user) => {
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
 		credentials: "include",
-		body: JSON.stringify({ username: user.username, password: user.password }),
+		body: JSON.stringify({ email: user.email, password: user.password }),
 	}).then(async function (response) {
 		return { response: await response.json(), status: response.status };
 	});
@@ -24,6 +24,25 @@ export const logout = async () => {
 		method: "DELETE",
 		headers: { "Content-Type": "application/json" },
 		credentials: "include",
+	}).then(async function (response) {
+		return { status: response.status };
+	});
+};
+
+export const newUser = async (user) => {
+	const { email, firstname, lastname, username, password, isAuthor } = user;
+	return await fetch("http://localhost:3000/users/sign-up", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		credentials: "include",
+		body: JSON.stringify({
+			email,
+			firstname,
+			lastname,
+			username,
+			password,
+			isAuthor,
+		}),
 	}).then(async function (response) {
 		return { status: response.status };
 	});

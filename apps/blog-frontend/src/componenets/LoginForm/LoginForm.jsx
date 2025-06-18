@@ -7,24 +7,24 @@ import PersonIcon from "@mui/icons-material/Person";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 const LoginForm = () => {
 	const navigate = useNavigate();
-	const [info, setInfo] = useState({ username: "", password: "" });
+	const [info, setInfo] = useState({ email: "", password: "" });
 	const handleChange = (e) => {
 		e.preventDefault();
-		let email = document.getElementById("username").value;
+		let email = document.getElementById("email").value;
 		let password = document.getElementById("password").value;
 
-		setInfo({ username: email, password: password });
+		setInfo({ email: email, password: password });
 	};
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
 		const response = await login(info);
-
+		console.log(response.status);
 		if (response.status === 200) {
 			navigate("/posts");
 		}
-		if (!response.status === 200) {
-			setInfo({ username: "", password: "" });
+		if (response.status === 400) {
+			setInfo({ email: "", password: "" });
 		}
 	};
 
@@ -35,11 +35,11 @@ const LoginForm = () => {
 				<div className={`${Styles.inputContainer}`}>
 					<label htmlFor="email">Email: </label>
 					<input
-						value={info.username}
+						value={info.email}
 						onChange={handleChange}
 						type="email"
 						name="email"
-						id="username"
+						id="email"
 					/>
 					<PersonIcon
 						sx={{ fontSize: 28, color: "black" }}
