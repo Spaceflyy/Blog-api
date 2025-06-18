@@ -44,11 +44,11 @@ exports.getNewToken = async (req, res) => {
 };
 
 exports.userLogin = async (req, res, next) => {
-	const { username, password } = req.body;
-	const user = await db.getUserByUsername(username);
+	const { email, password } = req.body;
+	const user = await db.getUserByUsername(email);
 
 	if (!user) {
-		return res.status(400).json({ error: "Incorrect Username" });
+		return res.status(400).json({ error: "Incorrect Email Address" });
 	}
 
 	const match = await bcrypt.compare(password, user.password);

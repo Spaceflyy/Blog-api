@@ -13,10 +13,10 @@ exports.addUser = async (req, res, next) => {
 			hashedPassword,
 			isAuthor
 		);
-		res.end();
 	} catch (error) {
 		next(error);
 	}
+	return res.status(200).json("New user successful!");
 };
 
 exports.getAllUsers = async (req, res) => {
