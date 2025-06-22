@@ -70,3 +70,7 @@ exports.addToken = async (userId, token) => {
 exports.getTokens = async () => {
 	return await prisma.refreshTokens.findMany({ select: { token: true } });
 };
+
+exports.deleteToken = async (id, refeshToken) => {
+	await prisma.refreshTokens.delete({ where: { id: id, token: refeshToken } });
+};

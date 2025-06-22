@@ -2,13 +2,18 @@ const jwt = require("jsonwebtoken");
 const db = require("../database/queries");
 const bcrypt = require("bcryptjs");
 
-exports.deleteToken = (req, res) => {
-	// refreshTokens = refreshTokens.filter(
-	// 	(token) => token !== req.cookies["REFRESH_TOKEN"]
-	// );
+exports.deleteToken = async (req, res) => {
+	const token = req.cookies["REFRESH_TOKEN"];
+	const { id } = jwt.verify(token, process.env.REFRESH_SECRET);
+	await db.deleteToken(id, token);
 
 	res.clearCookie("ACCESS_TOKEN");
-	res.clearCookie("REFRESH_TOKEN", { path: "/auth/token" });
+	res.clearCookie("REFRESH_TOKEN", {
+		httpOnly: true,
+		secure: true,
+		sameSite: "strict",
+		path: "/auth/",
+	});
 	return res.status(204).json({ message: "Logout successful" });
 };
 
@@ -16,16 +21,17 @@ exports.getNewToken = async (req, res) => {
 	const refreshToken = req.cookies["REFRESH_TOKEN"];
 	const dbResult = await db.getTokens();
 
-	// const refreshTokens = dbResult.map(function (token) {
-	// 	return token["token"];
-	// });
+	const refreshTokens = dbResult.map(function (token) {
+		return token["token"];
+	});
+
 	if (refreshToken === undefined) {
 		return res.status(401).json({ message: "User Unauthorized" });
 	}
 
-	// if (!refreshTokens.includes(refreshToken)) {
-	// 	return res.status(403).json({ message: "Forbidden" });
-	// }
+	if (!refreshTokens.includes(refreshToken)) {
+		return res.status(403).json({ message: "Forbidden" });
+	}
 
 	jwt.verify(refreshToken, process.env.REFRESH_SECRET, (err, user) => {
 		if (err) {
@@ -60,18 +66,18 @@ exports.userLogin = async (req, res, next) => {
 	const refreshToken = jwt.sign(user, process.env.REFRESH_SECRET, {
 		expiresIn: "30d",
 	});
-	// console.log(req.cookies["REFRESH_TOKEN"]);
-	// try {
-	// 	await db.addToken(user.id, refreshToken);
-	// } catch (error) {
-	// 	return res.status(400).json({ error: "Token already exists" });
-	// }
+
+	try {
+		await db.addToken(user.id, refreshToken);
+	} catch (error) {
+		return res.status(400).json({ error: "Token already exists" });
+	}
 
 	res.cookie("REFRESH_TOKEN", refreshToken, {
 		httpOnly: true,
 		secure: true,
 		sameSite: "strict",
-		path: "/auth/token",
+		path: "/auth/",
 		maxAge: 30 * 24 * 60 * 60 * 1000,
 	});
 	res.cookie("ACCESS_TOKEN", accessToken, {
