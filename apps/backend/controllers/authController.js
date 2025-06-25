@@ -4,7 +4,8 @@ const bcrypt = require("bcryptjs");
 
 exports.deleteToken = async (req, res) => {
 	const token = req.cookies["REFRESH_TOKEN"];
-	const { id } = jwt.verify(token, process.env.REFRESH_SECRET);
+	const { id } = jwt.decode(token, process.env.REFRESH_SECRET);
+
 	await db.deleteToken(id, token);
 
 	res.clearCookie("ACCESS_TOKEN");
@@ -37,7 +38,10 @@ exports.getNewToken = async (req, res) => {
 		if (err) {
 			return res.status(403).json({ message: "Invalid Token" });
 		}
-		const accessToken = generateAccessToken({ username: user.username });
+		const accessToken = generateAccessToken({
+			id: user.id,
+			username: user.username,
+		});
 
 		res.cookie("ACCESS_TOKEN", accessToken, {
 			httpOnly: true,
@@ -92,25 +96,4 @@ exports.userLogin = async (req, res, next) => {
 
 const generateAccessToken = (user) => {
 	return jwt.sign(user, process.env.TOKEN_SECRET, { expiresIn: "1h" });
-};
-
-exports.verifyToken = (req, res, next) => {
-	const token = req.cookies["ACCESS_TOKEN"];
-
-	// const bearerHeader = req.headers["authorization"];
-	// const token = bearerHeader && bearerHeader.split(" ")[1];
-
-	if (token == null) {
-		return res.status(401).json({ error: "User unauthorized" });
-	}
-
-	jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
-		if (err) {
-			return res.status(403).json({ error: "Fobidden" });
-		}
-
-		req.user = user;
-
-		next();
-	});
 };

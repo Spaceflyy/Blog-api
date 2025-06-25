@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const passport = require("passport");
 require("dotenv").config();
 const {
 	addUser,
@@ -8,11 +9,10 @@ const {
 	updateUser,
 	getUser,
 } = require("../controllers/userController");
-const { verifyToken } = require("../controllers/authController");
 const router = Router();
 router.post("/sign-up", addUser);
 
-router.get("/me", verifyToken, getUser);
+router.get("/me", passport.authenticate("jwt", { session: false }), getUser);
 router.get("/", getAllUsers);
 router.get("/:userId", getUserById);
 router.put("/:userId", updateUser);

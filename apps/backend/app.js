@@ -4,6 +4,7 @@ const app = express();
 const userRouter = require("./routers/userRouter");
 const authRouter = require("./routers/authRouter");
 const cookieParser = require("cookie-parser");
+const passport = require("./database/passport");
 app.use(cookieParser());
 app.use(
 	cors({
@@ -13,7 +14,7 @@ app.use(
 );
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
+app.use(passport.initialize());
 app.use("/users", userRouter);
 app.use("/auth", authRouter);
 

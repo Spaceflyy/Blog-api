@@ -72,5 +72,7 @@ exports.getTokens = async () => {
 };
 
 exports.deleteToken = async (id, refeshToken) => {
-	await prisma.refreshTokens.delete({ where: { id: id, token: refeshToken } });
+	await prisma.refreshTokens.delete({
+		where: { ownerId: id, token: refeshToken },
+	});
 };
