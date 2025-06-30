@@ -6,7 +6,7 @@ import { UserContext } from "../../contexts/UserContext";
 import { useContext } from "react";
 
 const Header = () => {
-	const { user } = useContext(UserContext);
+	const { user, setUser } = useContext(UserContext);
 	const navigate = useNavigate();
 	return (
 		<nav>
@@ -21,6 +21,7 @@ const Header = () => {
 					<Link
 						onClick={async () => {
 							await logout();
+							setUser();
 							navigate("/login");
 						}}
 					>

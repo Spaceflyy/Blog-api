@@ -14,6 +14,7 @@ const useUser = () => {
 					const refreshResult = await refresh();
 					if (refreshResult.status === 401) {
 						console.log("ERROR INVALID REFRESH TOKEN");
+						setUser();
 						return;
 					}
 
@@ -25,15 +26,17 @@ const useUser = () => {
 
 				if (res.status === 200) {
 					setUser(await res.json());
+				} else {
+					setUser();
 				}
 			} catch (error) {
 				console.error(error);
 
-				return null;
+				setUser();
 			}
 		})();
 	}, []);
-	return user;
+	return { user, setUser };
 };
 
 export default useUser;
