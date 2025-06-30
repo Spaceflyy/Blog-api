@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import Styles from "./header.module.css";
 import { logout } from "../../api/auth";
-import useUser from "../../hooks/useUser";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../contexts/UserContext";
+import { useContext } from "react";
 
 const Header = () => {
-	const user = useUser();
+	const { user } = useContext(UserContext);
 	const navigate = useNavigate();
 	return (
 		<nav>

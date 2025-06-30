@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { refresh, logout } from "../api/auth";
+import { refresh } from "../api/auth";
 const useUser = () => {
 	const [user, setUser] = useState();
 	useEffect(() => {

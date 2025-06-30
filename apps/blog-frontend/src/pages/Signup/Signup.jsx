@@ -3,7 +3,6 @@ import SignupForm from "../../componenets/SignupForm/SignupForm";
 const Posts = () => {
 	return (
 		<>
-			<Header />
 			<SignupForm />
 		</>
 	);

@@ -1,10 +1,10 @@
-import useUser from "../../hooks/useUser";
-import Header from "../../componenets/Header/Header";
+import { UserContext } from "../../contexts/UserContext";
+import { useContext } from "react";
+
 const Posts = () => {
-	const user = useUser();
+	const { user } = useContext(UserContext);
 	return (
 		<>
-			<Header />
 			{user ? (
 				<h1>Welcome {user.username}</h1>
 			) : (

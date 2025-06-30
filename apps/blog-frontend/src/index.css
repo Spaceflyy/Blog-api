@@ -6,6 +6,15 @@
 
 /*variables*/
 :root {
+	--bg-dark: oklch(0.1 0 267);
+	--bg: oklch(0.15 0 267);
+	--bg-light: oklch(0.2 0 267);
+	--text: oklch(0.96 0 267);
+	--text-muted: oklch(0.76 0 267);
+	--highlight: oklch(0.5 0 267);
+	--border: oklch(0.4 0 267);
+	--primary: oklch(0.76 0.1 267);
+
 	--colorMain: rgb(34, 40, 49);
 	--colorMed: rgb(57, 62, 70);
 	--colorLight: rgb(238, 238, 238);
@@ -33,16 +42,18 @@ html {
 body {
 	text-wrap: balance;
 	font: var(--p);
-	background: var(--colorMed);
+	background: var(--bg-dark);
 	color: var(--colorLight);
 }
 h1 {
 	font: var(--h1);
+	color: var(--text);
 }
 
 h2 {
 	font: var(--h2);
 	margin: var(--spacing2) 0;
+	color: var(--text);
 }
 
 p {
@@ -63,19 +74,11 @@ button {
 	all: unset;
 	display: inline-block;
 	margin: var(--spacing2) 0;
-	background: var(--colorMed);
+	background: var(--primary);
 	padding: var(--spacing2) var(--spacing3);
-	color: var(--colorLight);
 	border-radius: var(--spacing2);
-	border-bottom: solid var(--spacing1) var(--accent);
-	font: var(--p);
+	color: var(--bg);
 	cursor: pointer;
-}
-
-.btn:hover,
-button:hover {
-	background: linear-gradient(180deg, var(--colorMed), var(--colorMain));
-	transition: 0.3 ease-in-out;
 }
 
 img {

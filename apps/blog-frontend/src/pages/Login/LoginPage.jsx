@@ -4,7 +4,6 @@ import LoginForm from "../../componenets/LoginForm/LoginForm";
 const LoginPage = () => {
 	return (
 		<>
-			<Header />
 			<LoginForm />
 		</>
 	);

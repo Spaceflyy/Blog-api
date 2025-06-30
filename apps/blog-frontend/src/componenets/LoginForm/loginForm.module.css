@@ -1,12 +1,15 @@
 .test {
-	background-color: var(--colorMain);
+	background-color: var(--bg);
 }
 form {
 	display: grid;
 	padding: var(--spacing4);
 	gap: var(--spacing5);
 	width: 400px;
-	border-radius: 5px;
+	border-radius: 0.5rem;
+	color: var(--text-muted);
+	border: var(--border) solid 1px;
+	border-top: var(--highlight) solid 2px;
 }
 
 .container {
@@ -25,13 +28,13 @@ form {
 }
 
 input {
-	border: 3px solid var(--colorMain);
+	border: 3px solid var(--bg);
 	border-radius: 10px;
 	padding: 0.75rem;
 }
 
 input:focus {
-	border: 3px solid var(--accent);
+	border: 3px solid var(--highlight);
 	outline: none;
 }
 

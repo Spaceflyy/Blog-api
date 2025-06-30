@@ -2,12 +2,16 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../api/auth";
 import { Link } from "react-router-dom";
-import Styles from "./loginForm.module.css";
+import styles from "./loginForm.module.css";
 import PersonIcon from "@mui/icons-material/Person";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+
 const LoginForm = () => {
 	const navigate = useNavigate();
 	const [info, setInfo] = useState({ email: "", password: "" });
+	const [showPass, setShowPass] = useState(false);
+
 	const handleChange = (e) => {
 		e.preventDefault();
 		let email = document.getElementById("email").value;
@@ -19,7 +23,6 @@ const LoginForm = () => {
 	const handleLogin = async (e) => {
 		e.preventDefault();
 		const response = await login(info);
-		console.log(response.status);
 		if (response.status === 200) {
 			navigate("/posts");
 		}
@@ -29,10 +32,10 @@ const LoginForm = () => {
 	};
 
 	return (
-		<div className={`${Styles.container}`}>
-			<form onSubmit={handleLogin} className={`${Styles.test}`}>
+		<div className={styles.container}>
+			<form onSubmit={handleLogin} className={styles.test}>
 				<h2>Welcome!</h2>
-				<div className={`${Styles.inputContainer}`}>
+				<div className={styles.inputContainer}>
 					<label htmlFor="email">Email: </label>
 					<input
 						value={info.email}
@@ -43,31 +46,43 @@ const LoginForm = () => {
 					/>
 					<PersonIcon
 						sx={{ fontSize: 28, color: "black" }}
-						className={`${Styles.icon}`}
+						className={styles.icon}
 					/>
 				</div>
-				<div className={`${Styles.inputContainer}`}>
+				<div className={styles.inputContainer}>
 					<label htmlFor="password">Password:</label>
 
 					<input
 						value={info.password}
 						onChange={handleChange}
-						type="password"
+						type={showPass ? "text" : "password"}
 						name="password"
 						id="password"
 					/>
-					<VisibilityIcon
-						sx={{ fontSize: 28, color: "black" }}
-						className={`${Styles.icon}`}
-					/>
+
+					{showPass ? (
+						<VisibilityOffIcon
+							sx={{ fontSize: 28, color: "black" }}
+							onClick={() => {
+								setShowPass(!showPass);
+							}}
+							className={styles.icon}
+						/>
+					) : (
+						<VisibilityIcon
+							sx={{ fontSize: 28, color: "black" }}
+							onClick={() => {
+								setShowPass(!showPass);
+							}}
+							className={styles.icon}
+						/>
+					)}
 				</div>
 				<p>
-					Not a member? <Link>Sign up</Link>
+					Not a member? <Link to={"/signup"}>Sign up</Link>
 				</p>
 				<button>Login</button>
 			</form>
-
-			{/* <button onClick={handleClick}></button> */}
 		</div>
 	);
 };

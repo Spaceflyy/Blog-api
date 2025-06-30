@@ -6,12 +6,13 @@ nav div {
 nav {
 	justify-content: space-between;
 	align-items: center;
-	background-color: var(--colorMain);
+	background-color: var(--bg);
+	border-bottom: var(--border) solid 1px;
 	padding: 1rem;
 }
 nav div {
 	gap: 1rem;
 }
 a {
-	color: white;
+	color: var(--text);
 }
