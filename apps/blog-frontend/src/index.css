@@ -6,19 +6,26 @@
 
 /*variables*/
 :root {
-	--bg-dark: oklch(0.1 0 267);
-	--bg: oklch(0.15 0 267);
-	--bg-light: oklch(0.2 0 267);
-	--text: oklch(0.96 0 267);
-	--text-muted: oklch(0.76 0 267);
-	--highlight: oklch(0.5 0 267);
-	--border: oklch(0.4 0 267);
-	--primary: oklch(0.76 0.1 267);
+	/*DARK MODE */
+	--border-card: solid 1px var(--border);
+	--gradient: linear-gradient(0deg, var(--bg) 95%, var(--bg-light));
+	--gradient-hover: linear-gradient(0deg, var(--bg), var(--bg-light));
+	--shadow: 0px 2px 2px hsla(0, 0%, 0%, 0.07), 0px 4px 4px hsla(0, 0%, 0%, 0.15);
 
-	--colorMain: rgb(34, 40, 49);
-	--colorMed: rgb(57, 62, 70);
-	--colorLight: rgb(238, 238, 238);
-	--accent: rgb(0, 173, 181);
+	--bg-dark: oklch(0.1 0.045 239);
+	--bg: oklch(0.15 0.045 239);
+	--bg-light: oklch(0.2 0.045 239);
+	--text: oklch(0.96 0.09 239);
+	--text-muted: oklch(0.76 0.09 239);
+	--highlight: oklch(0.5 0.09 239);
+	--border: oklch(0.4 0.09 239);
+	--border-muted: oklch(0.3 0.09 239);
+	--primary: oklch(0.76 0.1 239);
+	--secondary: oklch(0.76 0.1 59);
+	--danger: oklch(0.7 0.09 30);
+	--warning: oklch(0.7 0.09 100);
+	--success: oklch(0.7 0.09 160);
+	--info: oklch(0.7 0.09 260);
 
 	--ff: "Noto Sans JP", serif;
 	--ff2: "Fira Sans", serif;
@@ -38,12 +45,32 @@
 html {
 	scroll-behavior: smooth;
 }
+body.light {
+	--border-card: solid 1px var(--bg);
+	--gradient: linear-gradient(0deg, var(--bg) 95%, var(--bg-light));
+	--gradient-hover: linear-gradient(0deg, var(--bg), var(--bg-light));
+
+	--bg-dark: oklch(0.92 0.045 239);
+	--bg: oklch(0.96 0.045 239);
+	--bg-light: oklch(1 0.045 239);
+	--text: oklch(0.15 0.09 239);
+	--text-muted: oklch(0.4 0.09 239);
+	--highlight: oklch(1 0.09 239);
+	--border: oklch(0.6 0.09 239);
+	--border-muted: oklch(0.7 0.09 239);
+	--primary: oklch(0.4 0.1 239);
+	--secondary: oklch(0.4 0.1 59);
+	--danger: oklch(0.5 0.09 30);
+	--warning: oklch(0.5 0.09 100);
+	--success: oklch(0.5 0.09 160);
+	--info: oklch(0.5 0.09 260);
+}
 
 body {
 	text-wrap: balance;
 	font: var(--p);
 	background: var(--bg-dark);
-	color: var(--colorLight);
+	color: var(--text-muted);
 }
 h1 {
 	font: var(--h1);
@@ -71,16 +98,23 @@ a:hover {
 
 .btn,
 button {
-	all: unset;
-	display: inline-block;
-	margin: var(--spacing2) 0;
-	background: var(--primary);
-	padding: var(--spacing2) var(--spacing3);
-	border-radius: var(--spacing2);
-	color: var(--bg);
-	cursor: pointer;
+	background: var(--gradient);
+	padding: 0.5rem 1rem;
+	color: var(--text);
+	font-weight: 700;
+	border-radius: 0.5rem;
+	border-top: solid 1px var(--highlight);
+	border: var(--border-card);
+	box-shadow: var(--shadow);
+	font: var(--p);
+}
+
+.btn:hover,
+button:hover {
+	background: var(--gradient-hover);
 }
 
 img {
 	width: 100%;
+	object-fit: cover;
 }

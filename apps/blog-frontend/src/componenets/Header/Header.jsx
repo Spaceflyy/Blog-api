@@ -4,10 +4,16 @@ import { logout } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../contexts/UserContext";
 import { useContext } from "react";
+import LightModeIcon from "@mui/icons-material/LightMode";
 
 const Header = () => {
 	const { user, setUser } = useContext(UserContext);
 	const navigate = useNavigate();
+
+	const toggleTheme = (e) => {
+		e.preventDefault();
+		document.body.classList.toggle("light");
+	};
 	return (
 		<nav>
 			<div>
@@ -30,6 +36,7 @@ const Header = () => {
 				</div>
 			) : (
 				<div>
+					<LightModeIcon onClick={toggleTheme}></LightModeIcon>
 					<Link to="/login">Login</Link>
 					<Link to="/signup">Register</Link>
 				</div>

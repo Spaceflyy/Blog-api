@@ -31,7 +31,7 @@ const SignupForm = () => {
 	};
 	return (
 		<div className={Styles.container}>
-			<form className={Styles.test} onSubmit={handleSubmit}>
+			<form onSubmit={handleSubmit}>
 				<h2>Sign up</h2>
 				<div className={Styles.inputContainer}>
 					<label htmlFor="email">Email: </label>

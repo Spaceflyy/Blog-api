@@ -38,7 +38,7 @@ const LoginForm = () => {
 
 	return (
 		<div className={styles.container}>
-			<form onSubmit={handleLogin} className={styles.test}>
+			<form onSubmit={handleLogin}>
 				<h2>Welcome!</h2>
 				<div className={styles.inputContainer}>
 					<label htmlFor="email">Email: </label>
