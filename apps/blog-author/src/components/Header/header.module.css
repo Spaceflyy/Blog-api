@@ -1,0 +1,20 @@
+nav,
+nav div {
+	display: flex;
+}
+
+nav {
+	justify-content: space-between;
+	align-items: center;
+	background-color: var(--bg);
+	border-bottom: var(--border) solid 1px;
+	padding: 1rem;
+	position: sticky;
+	top: 0px;
+}
+nav div {
+	gap: 1rem;
+}
+a {
+	color: var(--text);
+}
