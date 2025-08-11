@@ -42,4 +42,5 @@ input:focus {
 	bottom: 13%;
 	right: 2px;
 	margin-right: 0.5rem;
+	color: red;
 }

@@ -12,20 +12,21 @@
 	--gradient-hover: linear-gradient(0deg, var(--bg), var(--bg-light));
 	--shadow: 0px 2px 2px hsla(0, 0%, 0%, 0.07), 0px 4px 4px hsla(0, 0%, 0%, 0.15);
 
-	--bg-dark: oklch(0.1 0.045 239);
-	--bg: oklch(0.15 0.045 239);
-	--bg-light: oklch(0.2 0.045 239);
-	--text: oklch(0.96 0.09 239);
-	--text-muted: oklch(0.76 0.09 239);
-	--highlight: oklch(0.5 0.09 239);
-	--border: oklch(0.4 0.09 239);
-	--border-muted: oklch(0.3 0.09 239);
+	--bg-dark: oklch(0.1 0.02 239);
+	--bg: oklch(0.15 0.02 239);
+	--bg-light: oklch(0.2 0.02 239);
+
+	--text: oklch(0.96 0.04 239);
+	--text-muted: oklch(0.76 0.04 239);
+	--highlight: oklch(0.5 0.04 239);
+	--border: oklch(0.4 0.04 239);
+	--border-muted: oklch(0.3 0.04 239);
 	--primary: oklch(0.76 0.1 239);
 	--secondary: oklch(0.76 0.1 59);
-	--danger: oklch(0.7 0.09 30);
-	--warning: oklch(0.7 0.09 100);
-	--success: oklch(0.7 0.09 160);
-	--info: oklch(0.7 0.09 260);
+	--danger: oklch(0.7 0.05 30);
+	--warning: oklch(0.7 0.05 100);
+	--success: oklch(0.7 0.05 160);
+	--info: oklch(0.7 0.05 260);
 
 	--ff: "Noto Sans JP", serif;
 	--ff2: "Fira Sans", serif;
@@ -50,20 +51,20 @@ body.light {
 	--gradient: linear-gradient(0deg, var(--bg) 95%, var(--bg-light));
 	--gradient-hover: linear-gradient(0deg, var(--bg), var(--bg-light));
 
-	--bg-dark: oklch(0.92 0.045 239);
-	--bg: oklch(0.96 0.045 239);
-	--bg-light: oklch(1 0.045 239);
-	--text: oklch(0.15 0.09 239);
-	--text-muted: oklch(0.4 0.09 239);
-	--highlight: oklch(1 0.09 239);
-	--border: oklch(0.6 0.09 239);
-	--border-muted: oklch(0.7 0.09 239);
+	--bg-dark: oklch(0.92 0.02 239);
+	--bg: oklch(0.96 0.02 239);
+	--bg-light: oklch(1 0.02 239);
+	--text: oklch(0.15 0.04 239);
+	--text-muted: oklch(0.4 0.04 239);
+	--highlight: oklch(1 0.04 239);
+	--border: oklch(0.6 0.04 239);
+	--border-muted: oklch(0.7 0.04 239);
 	--primary: oklch(0.4 0.1 239);
 	--secondary: oklch(0.4 0.1 59);
-	--danger: oklch(0.5 0.09 30);
-	--warning: oklch(0.5 0.09 100);
-	--success: oklch(0.5 0.09 160);
-	--info: oklch(0.5 0.09 260);
+	--danger: oklch(0.5 0.05 30);
+	--warning: oklch(0.5 0.05 100);
+	--success: oklch(0.5 0.05 160);
+	--info: oklch(0.5 0.05 260);
 }
 
 body {
@@ -112,6 +113,7 @@ button {
 .btn:hover,
 button:hover {
 	background: var(--gradient-hover);
+	cursor: pointer;
 }
 
 img {

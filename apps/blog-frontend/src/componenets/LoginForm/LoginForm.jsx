@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../api/auth";
 import { Link } from "react-router-dom";
-import { UserContext } from "../../contexts/UserContext";
+import { useUserContext } from "../../../../shared/userContext/userContext";
 import { useContext } from "react";
 
 import styles from "./loginForm.module.css";
@@ -14,7 +14,7 @@ const LoginForm = () => {
 	const navigate = useNavigate();
 	const [info, setInfo] = useState({ email: "", password: "" });
 	const [showPass, setShowPass] = useState(false);
-	const { setUser } = useContext(UserContext);
+	const { setUser } = useUserContext();
 
 	const handleChange = (e) => {
 		e.preventDefault();
@@ -27,8 +27,10 @@ const LoginForm = () => {
 	const handleLogin = async (e) => {
 		e.preventDefault();
 		const { user, status } = await login(info);
+
 		if (status === 200) {
 			setUser(user);
+
 			navigate("/posts");
 		}
 		if (status === 400) {

@@ -1,3 +1,17 @@
+.heroSection {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100dvh;
+	background-color: var(--bg-dark);
+	padding: 1rem;
+}
+
 .heroContainer {
+	padding: var(--spacing5);
+	border-radius: 10px;
 	background-color: var(--bg);
+
+	height: 100%;
+	width: 100%;
 }
