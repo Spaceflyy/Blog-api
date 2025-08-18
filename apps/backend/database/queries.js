@@ -61,8 +61,13 @@ exports.editUser = async (
 };
 
 //////////POST QUERIES///////////////////////////////
-exports.createPost = async (userId, postId, content) => {};
+exports.createPost = async (authorId, title, content) => {
+	await prisma.post.create({ data: { authorId, title, content } });
+};
 
+exports.getPosts = async () => {
+	return await prisma.post.findMany();
+};
 ////////////TOKEN QUERIES ///////////////////
 exports.addToken = async (userId, token) => {
 	await prisma.refreshTokens.create({ data: { ownerId: userId, token: token } });

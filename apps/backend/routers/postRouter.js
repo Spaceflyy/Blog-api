@@ -1,9 +1,9 @@
 const { Router } = require("express");
 const router = Router();
+const { addPost, getAllPosts } = require("../controllers/postController");
 
-router.post("/", (req, res) => {
-	//create a post
-});
+router.post("/new", addPost);
+
 router.post("/:postId/:commentId", (req, res) => {
 	//create comment on post
 });
@@ -11,9 +11,7 @@ router.post("/:postId/:commentId", (req, res) => {
 router.get("/:postId", (req, res) => {
 	//get a post
 });
-router.get("/posts", (req, res) => {
-	//get all post
-});
+router.get("/", getAllPosts);
 router.get("/:postId/comments", (req, res) => {
 	//get all comments on post
 });

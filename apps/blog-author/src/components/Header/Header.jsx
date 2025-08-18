@@ -18,6 +18,9 @@ const Header = () => {
 		<nav>
 			<div>
 				<Link to="http://localhost:5173/">Home</Link>
+				<Link to="new-post" className="btn">
+					New Post
+				</Link>
 			</div>
 			{/* {user ? (
 				<div>

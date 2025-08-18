@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../../api/auth";
 import { Link } from "react-router-dom";
 import { useUserContext } from "../../../../shared/userContext/userContext";
-import { useContext } from "react";
 
 import styles from "./loginForm.module.css";
 import PersonIcon from "@mui/icons-material/Person";
