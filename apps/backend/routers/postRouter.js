@@ -1,6 +1,10 @@
 const { Router } = require("express");
 const router = Router();
-const { addPost, getAllPosts } = require("../controllers/postController");
+const {
+	addPost,
+	getAllPosts,
+	getSinglePost,
+} = require("../controllers/postController");
 
 router.post("/new", addPost);
 
@@ -8,10 +12,9 @@ router.post("/:postId/:commentId", (req, res) => {
 	//create comment on post
 });
 
-router.get("/:postId", (req, res) => {
-	//get a post
-});
+router.get("/:postId", getSinglePost);
 router.get("/", getAllPosts);
+
 router.get("/:postId/comments", (req, res) => {
 	//get all comments on post
 });

@@ -13,3 +13,8 @@ exports.addPost = async (req, res, next) => {
 exports.getAllPosts = async (req, res) => {
 	return res.send(await db.getPosts());
 };
+
+exports.getSinglePost = async (req, res) => {
+	const { postId } = req.params;
+	return res.status(200).send(await db.getPostById(Number(postId)));
+};

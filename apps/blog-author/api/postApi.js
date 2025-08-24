@@ -12,3 +12,7 @@ export const createPost = async (authorId, title, content) => {
 		return { status: response.status };
 	});
 };
+
+export const getAllPosts = async () => {};
+
+export const getUserPosts = async (userId) => {};

@@ -11,6 +11,7 @@ const NewPost = () => {
 	const navigate = useNavigate();
 	const handleEditorChange = (newContent) => {
 		setContent(newContent);
+		console.log(user);
 	};
 
 	const handleTitleChange = () => {
@@ -23,20 +24,12 @@ const NewPost = () => {
 
 		const res = await createPost(user.id, title, content);
 
-		//TODO: get this to navigate to the homepage, currently doesnt work
 		if (res.status === 200) {
-			// navigate("/");
+			navigate("/");
 		}
-
-		//send the content of the tinymce to the database
-		//need to figure out how to render from the content received from the database
 	};
 	return (
-		<form
-			onSubmit={() => {
-				handleSubmit;
-			}}
-		>
+		<form onSubmit={handleSubmit}>
 			<label htmlFor="title">Title:</label>
 			<input
 				value={title}
