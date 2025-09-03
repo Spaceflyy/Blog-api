@@ -11,7 +11,6 @@ const NewPost = () => {
 	const navigate = useNavigate();
 	const handleEditorChange = (newContent) => {
 		setContent(newContent);
-		console.log(user);
 	};
 
 	const handleTitleChange = () => {

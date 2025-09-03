@@ -72,6 +72,14 @@ exports.getPosts = async () => {
 exports.getPostById = async (postId) => {
 	return await prisma.post.findUnique({ where: { id: postId } });
 };
+
+exports.deleteSinglePost = async (postId) => {
+	await prisma.post.delete({ where: { id: postId } });
+};
+
+exports.updatePostById = async (postId, title, content) => {
+	await prisma.post.update({ where: { id: postId }, data: { title, content } });
+};
 ////////////TOKEN QUERIES ///////////////////
 exports.addToken = async (userId, token) => {
 	await prisma.refreshTokens.create({ data: { ownerId: userId, token: token } });
