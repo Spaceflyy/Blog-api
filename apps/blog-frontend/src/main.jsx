@@ -7,6 +7,7 @@ import Posts from "./pages/Posts/Posts.jsx";
 import Signup from "./pages/Signup/Signup.jsx";
 import LoginPage from "./pages/Login/LoginPage.jsx";
 import Home from "./pages/Home/Home.jsx";
+import Post from "./pages/Post/Post.jsx";
 
 const router = createBrowserRouter([
 	{
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
 				path: "signup",
 				element: <Signup />,
 			},
+			{ path: "/post/:id", element: <Post /> },
 		],
 	},
 ]);

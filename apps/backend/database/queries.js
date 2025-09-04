@@ -66,11 +66,18 @@ exports.createPost = async (authorId, title, content) => {
 };
 
 exports.getPosts = async () => {
-	return await prisma.post.findMany();
+	return await prisma.post.findMany({
+		include: { author: { select: { username: true } } },
+	});
 };
 
 exports.getPostById = async (postId) => {
-	return await prisma.post.findUnique({ where: { id: postId } });
+	return await prisma.post.findUnique({
+		where: { id: postId },
+		include: {
+			comments: { include: { author: { select: { username: true } } } },
+		},
+	});
 };
 
 exports.deleteSinglePost = async (postId) => {
