@@ -34,3 +34,12 @@ exports.editSinglePost = async (req, res) => {
 		.status(200)
 		.send(await db.updatePostById(Number(postId), title, content));
 };
+
+exports.addComment = async (req, res) => {
+	const { postId } = req.params;
+	const { content, authorId } = req.body;
+
+	return res
+		.status(200)
+		.send(await db.addNewComment(Number(postId), Number(authorId), content));
+};

@@ -6,18 +6,16 @@ const {
 	getSinglePost,
 	deletePost,
 	editSinglePost,
+	addComment,
 } = require("../controllers/postController");
 
 router.post("/new", addPost);
 router.get("/:postId", getSinglePost);
 router.get("/", getAllPosts);
 router.delete("/delete/:postId", deletePost);
-
 router.put("/edit/:postId", editSinglePost);
 
-router.post("/:postId/:commentId", (req, res) => {
-	//create comment on post
-});
+router.post("/:postId/comments/new", addComment);
 
 router.get("/:postId/comments", (req, res) => {
 	//get all comments on post

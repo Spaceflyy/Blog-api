@@ -48,3 +48,17 @@ export const newUser = async (user) => {
 		return { status: response.status };
 	});
 };
+
+export const newComment = async (postId, authorId, content) => {
+	return await fetch(`http://localhost:3000/posts/${postId}/comments/new`, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		credentials: "include",
+		body: JSON.stringify({
+			content,
+			authorId,
+		}),
+	}).then(async function (response) {
+		return { status: response.status };
+	});
+};
