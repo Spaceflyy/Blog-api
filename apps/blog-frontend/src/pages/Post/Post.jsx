@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { newComment } from "../../api/auth";
+import CommentForm from "../../componenets/CommentForm/CommentForm";
 import { useUserContext } from "../../../../shared/userContext/userContext";
+import { updateComment } from "../../api/auth";
 const Post = () => {
 	const [post, setPost] = useState();
-	const [comment, setComment] = useState();
-	const navigate = useNavigate();
-	const { user } = useUserContext();
+	const [editing, setEditing] = useState();
 	const { id } = useParams();
+	const { user } = useUserContext();
+	const navigate = useNavigate();
 	useEffect(() => {
 		(async () => {
 			try {
@@ -26,39 +27,58 @@ const Post = () => {
 		})();
 	}, []);
 
-	const handleSubmit = async (e) => {
+	const handleSumbit = async (e) => {
 		e.preventDefault();
-		const res = await newComment(post.id, user.id, comment);
 
-		if (res.status === 200) {
-			navigate(0);
+		e.preventDefault();
+		const comment = document.querySelector(`[data-id="${editing}"]`).value;
+		if (comment.trim().length > 0) {
+			const res = await updateComment(editing, comment);
+			if (res.status === 200) {
+				navigate(0);
+			}
 		}
 	};
+
 	return (
 		<>
 			<h1>{post?.title}</h1>
 			<span dangerouslySetInnerHTML={{ __html: post?.content }} />
-			<form method="POST" onSubmit={handleSubmit}>
-				<label htmlFor="leaveComment"></label>
-				<textarea
-					onChange={(e) => {
-						setComment(e.target.value);
-					}}
-					name="leaveComment"
-					id="leaveComment"
-					placeholder="Leave a Comment..."
-					value={comment}
-				></textarea>
-				<button>Add Comment</button>
-			</form>
-
+			<CommentForm />
 			<h2>{post?.comments.length} Comments</h2>
 			{post?.comments.map((comment) => {
 				return (
-					<div>
-						<h4>{comment.content}</h4>
-						<p>{comment.author.username}</p>
-					</div>
+					<>
+						{editing === comment.id ? (
+							<form onSubmit={handleSumbit}>
+								<input data-id={comment.id} defaultValue={comment.content}></input>
+								<button type="submit">Save</button>
+								<button
+									onClick={() => {
+										setEditing();
+									}}
+								>
+									Cancel
+								</button>
+							</form>
+						) : (
+							<div>
+								<h4>{comment.content}</h4>
+								<p>{comment.author.username}</p>
+								{comment.authorId === user.id ? (
+									<button
+										onClick={() => {
+											setEditing(comment.id);
+										}}
+									>
+										Edit
+									</button>
+								) : (
+									<></>
+								)}
+							</div>
+						)}
+					</>
 				);
 			})}
 		</>

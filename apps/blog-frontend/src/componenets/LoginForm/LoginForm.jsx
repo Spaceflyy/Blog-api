@@ -39,11 +39,12 @@ const LoginForm = () => {
 
 	return (
 		<div className={styles.container}>
-			<form onSubmit={handleLogin}>
+			<form className={styles.formStyle} onSubmit={handleLogin}>
 				<h2>Welcome!</h2>
 				<div className={styles.inputContainer}>
 					<label htmlFor="email">Email: </label>
 					<input
+						className={styles.inputStyle}
 						value={info.email}
 						onChange={handleChange}
 						type="email"
@@ -59,6 +60,7 @@ const LoginForm = () => {
 					<label htmlFor="password">Password:</label>
 
 					<input
+						className={styles.inputStyle}
 						value={info.password}
 						onChange={handleChange}
 						type={showPass ? "text" : "password"}

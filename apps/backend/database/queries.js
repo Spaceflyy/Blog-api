@@ -87,12 +87,14 @@ exports.deleteSinglePost = async (postId) => {
 exports.updatePostById = async (postId, title, content) => {
 	await prisma.post.update({ where: { id: postId }, data: { title, content } });
 };
+////////////COMMENT QUERIES ///////////////////
 
 exports.addNewComment = async (postId, authorId, content) => {
-	console.log(postId);
-	console.log(content);
-	console.log(authorId);
 	await prisma.comment.create({ data: { parentId: postId, content, authorId } });
+};
+
+exports.updateComment = async (id, content) => {
+	await prisma.comment.update({ where: { id }, data: { content } });
 };
 ////////////TOKEN QUERIES ///////////////////
 exports.addToken = async (userId, token) => {

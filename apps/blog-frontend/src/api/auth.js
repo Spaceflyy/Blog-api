@@ -62,3 +62,19 @@ export const newComment = async (postId, authorId, content) => {
 		return { status: response.status };
 	});
 };
+
+export const updateComment = async (commentId, content) => {
+	return await fetch(
+		`http://localhost:3000/posts/comments/update/${commentId}`,
+		{
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			credentials: "include",
+			body: JSON.stringify({
+				content,
+			}),
+		}
+	).then(async function (response) {
+		return { status: response.status };
+	});
+};

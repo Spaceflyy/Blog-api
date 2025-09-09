@@ -43,3 +43,11 @@ exports.addComment = async (req, res) => {
 		.status(200)
 		.send(await db.addNewComment(Number(postId), Number(authorId), content));
 };
+
+exports.editComment = async (req, res) => {
+	const { commentId } = req.params;
+	const { content } = req.body;
+	return res
+		.status(200)
+		.send(await db.updateComment(Number(commentId), content));
+};

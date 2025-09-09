@@ -7,6 +7,7 @@ const {
 	deletePost,
 	editSinglePost,
 	addComment,
+	editComment,
 } = require("../controllers/postController");
 
 router.post("/new", addPost);
@@ -16,7 +17,7 @@ router.delete("/delete/:postId", deletePost);
 router.put("/edit/:postId", editSinglePost);
 
 router.post("/:postId/comments/new", addComment);
-
+router.put("/comments/update/:commentId", editComment);
 router.get("/:postId/comments", (req, res) => {
 	//get all comments on post
 });
