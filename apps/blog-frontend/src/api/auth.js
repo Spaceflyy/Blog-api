@@ -78,3 +78,16 @@ export const updateComment = async (commentId, content) => {
 		return { status: response.status };
 	});
 };
+
+export const deleteComment = async (commentId) => {
+	return await fetch(
+		`http://localhost:3000/posts/comments/delete/${commentId}`,
+		{
+			method: "DELETE",
+			headers: { "Content-Type": "application/json" },
+			credentials: "include",
+		}
+	).then(async function (response) {
+		return { status: response.status };
+	});
+};

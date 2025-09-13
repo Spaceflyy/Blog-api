@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import CommentForm from "../../componenets/CommentForm/CommentForm";
 import { useUserContext } from "../../../../shared/userContext/userContext";
-import { updateComment } from "../../api/auth";
+import { updateComment, deleteComment } from "../../api/auth";
 const Post = () => {
 	const [post, setPost] = useState();
 	const [editing, setEditing] = useState();
@@ -29,8 +29,6 @@ const Post = () => {
 
 	const handleSumbit = async (e) => {
 		e.preventDefault();
-
-		e.preventDefault();
 		const comment = document.querySelector(`[data-id="${editing}"]`).value;
 		if (comment.trim().length > 0) {
 			const res = await updateComment(editing, comment);
@@ -40,11 +38,18 @@ const Post = () => {
 		}
 	};
 
+	const handleDelete = async (commentId) => {
+		const res = await deleteComment(commentId);
+		if (res.status === 200) {
+			navigate(0);
+		}
+	};
+
 	return (
 		<>
 			<h1>{post?.title}</h1>
 			<span dangerouslySetInnerHTML={{ __html: post?.content }} />
-			<CommentForm />
+			<CommentForm postId={id} />
 			<h2>{post?.comments.length} Comments</h2>
 			{post?.comments.map((comment) => {
 				return (
@@ -56,8 +61,7 @@ const Post = () => {
 								<button
 									onClick={() => {
 										setEditing();
-									}}
-								>
+									}}>
 									Cancel
 								</button>
 							</form>
@@ -65,14 +69,22 @@ const Post = () => {
 							<div>
 								<h4>{comment.content}</h4>
 								<p>{comment.author.username}</p>
-								{comment.authorId === user.id ? (
-									<button
-										onClick={() => {
-											setEditing(comment.id);
-										}}
-									>
-										Edit
-									</button>
+								{comment.authorId === user?.id ? (
+									<div>
+										<button
+											onClick={() => {
+												setEditing(comment.id);
+											}}>
+											Edit
+										</button>
+										<button
+											onClick={() => {
+												handleDelete(comment.id);
+											}}>
+											{" "}
+											Delete
+										</button>
+									</div>
 								) : (
 									<></>
 								)}

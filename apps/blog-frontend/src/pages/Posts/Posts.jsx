@@ -26,7 +26,7 @@ const Posts = () => {
 			{posts?.map((post) => {
 				return (
 					<div key={post.id}>
-						<Link to={`/post/${post.id}`}>
+						<Link to={`/posts/${post.id}`}>
 							<h2>{post.title}</h2>
 						</Link>
 						<p>By {post.author.username}</p>

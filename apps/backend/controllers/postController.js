@@ -51,3 +51,8 @@ exports.editComment = async (req, res) => {
 		.status(200)
 		.send(await db.updateComment(Number(commentId), content));
 };
+
+exports.deleteComment = async (req, res) => {
+	const { id } = req.params;
+	return res.status(200).send(await db.deleteSingleComment(Number(id)));
+};

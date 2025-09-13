@@ -96,6 +96,10 @@ exports.addNewComment = async (postId, authorId, content) => {
 exports.updateComment = async (id, content) => {
 	await prisma.comment.update({ where: { id }, data: { content } });
 };
+
+exports.deleteSingleComment = async (id) => {
+	await prisma.comment.delete({ where: { id } });
+};
 ////////////TOKEN QUERIES ///////////////////
 exports.addToken = async (userId, token) => {
 	await prisma.refreshTokens.create({ data: { ownerId: userId, token: token } });
