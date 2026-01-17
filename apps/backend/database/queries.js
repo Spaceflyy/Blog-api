@@ -75,7 +75,13 @@ exports.getPostById = async (postId) => {
 	return await prisma.post.findUnique({
 		where: { id: postId },
 		include: {
-			comments: { include: { author: { select: { username: true } } } },
+			comments: {
+				include: {
+					author: { select: { username: true } },
+					replies: { include: { author: { select: { username: true } } } },
+				},
+				orderBy: { created_at: "desc" },
+			},
 		},
 	});
 };
@@ -89,8 +95,15 @@ exports.updatePostById = async (postId, title, content) => {
 };
 ////////////COMMENT QUERIES ///////////////////
 
-exports.addNewComment = async (postId, authorId, content) => {
-	await prisma.comment.create({ data: { parentId: postId, content, authorId } });
+exports.addNewComment = async (
+	postId,
+	authorId,
+	content,
+	parentCommentId = null
+) => {
+	await prisma.comment.create({
+		data: { parentId: postId, parentCommentId, content, authorId },
+	});
 };
 
 exports.updateComment = async (id, content) => {

@@ -31,7 +31,6 @@ const useUser = () => {
 				}
 			} catch (error) {
 				console.error(error);
-
 				setUser();
 			}
 		})();

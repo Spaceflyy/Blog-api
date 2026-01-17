@@ -37,11 +37,19 @@ exports.editSinglePost = async (req, res) => {
 
 exports.addComment = async (req, res) => {
 	const { postId } = req.params;
-	const { content, authorId } = req.body;
+	const { content, authorId, parentCommentId } = req.body;
+	console.log({ postId, authorId, content, parentCommentId });
 
 	return res
 		.status(200)
-		.send(await db.addNewComment(Number(postId), Number(authorId), content));
+		.send(
+			await db.addNewComment(
+				Number(postId),
+				Number(authorId),
+				content,
+				Number(parentCommentId)
+			)
+		);
 };
 
 exports.editComment = async (req, res) => {

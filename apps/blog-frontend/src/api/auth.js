@@ -49,14 +49,20 @@ export const newUser = async (user) => {
 	});
 };
 
-export const newComment = async (postId, authorId, content) => {
+export const newComment = async (
+	postId,
+	authorId,
+	content,
+	parentCommentId
+) => {
 	return await fetch(`http://localhost:3000/posts/${postId}/comments/new`, {
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
 		credentials: "include",
 		body: JSON.stringify({
-			content,
 			authorId,
+			content,
+			parentCommentId,
 		}),
 	}).then(async function (response) {
 		return { status: response.status };
@@ -91,3 +97,20 @@ export const deleteComment = async (commentId) => {
 		return { status: response.status };
 	});
 };
+
+//get comments by parentid then map those to the comments whos id matches the comments parent id
+//when show replies is clicked get the replies to show x replies on each comment
+
+// export const addCommentReply = async (commentId, content) => {
+// 	return (await fetch(
+// 		`htttp://localhost:3000/posts/comments/reply/${commentId}`
+// 	),
+// 	{
+// 		method: "POST",
+// 		headers: { "Content-Type": "application/json" },
+// 		credentials: "include",
+// 		body: JSON.stringify({ content }),
+// 	}).then(async function (response) {
+// 		return { status: response.status };
+// 	});
+// };

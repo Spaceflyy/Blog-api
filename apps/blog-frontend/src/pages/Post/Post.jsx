@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import CommentForm from "../../componenets/CommentForm/CommentForm";
-import { useUserContext } from "../../../../shared/userContext/userContext";
-import { updateComment, deleteComment } from "../../api/auth";
+
+import Comment from "../../componenets/Comment/Comment";
 const Post = () => {
 	const [post, setPost] = useState();
-	const [editing, setEditing] = useState();
+	const [editingId, setEditingId] = useState(null);
+
 	const { id } = useParams();
-	const { user } = useUserContext();
-	const navigate = useNavigate();
+
 	useEffect(() => {
 		(async () => {
 			try {
@@ -25,72 +25,37 @@ const Post = () => {
 				setPost();
 			}
 		})();
-	}, []);
+	}, [id]);
 
-	const handleSumbit = async (e) => {
-		e.preventDefault();
-		const comment = document.querySelector(`[data-id="${editing}"]`).value;
-		if (comment.trim().length > 0) {
-			const res = await updateComment(editing, comment);
-			if (res.status === 200) {
-				navigate(0);
-			}
-		}
+	const updatePostCommments = (newComment) => {
+		setPost((prevPost) => ({
+			...prevPost,
+
+			comments: prevPost.comments.map((comment) => {
+				return comment.id === newComment.id ? newComment : comment;
+			}),
+		}));
 	};
-
-	const handleDelete = async (commentId) => {
-		const res = await deleteComment(commentId);
-		if (res.status === 200) {
-			navigate(0);
-		}
-	};
-
 	return (
 		<>
 			<h1>{post?.title}</h1>
 			<span dangerouslySetInnerHTML={{ __html: post?.content }} />
+
 			<CommentForm postId={id} />
 			<h2>{post?.comments.length} Comments</h2>
+
 			{post?.comments.map((comment) => {
+				if (comment.parentCommentId !== null) {
+					return;
+				}
 				return (
-					<>
-						{editing === comment.id ? (
-							<form onSubmit={handleSumbit}>
-								<input data-id={comment.id} defaultValue={comment.content}></input>
-								<button type="submit">Save</button>
-								<button
-									onClick={() => {
-										setEditing();
-									}}>
-									Cancel
-								</button>
-							</form>
-						) : (
-							<div>
-								<h4>{comment.content}</h4>
-								<p>{comment.author.username}</p>
-								{comment.authorId === user?.id ? (
-									<div>
-										<button
-											onClick={() => {
-												setEditing(comment.id);
-											}}>
-											Edit
-										</button>
-										<button
-											onClick={() => {
-												handleDelete(comment.id);
-											}}>
-											{" "}
-											Delete
-										</button>
-									</div>
-								) : (
-									<></>
-								)}
-							</div>
-						)}
-					</>
+					<Comment
+						key={comment.id}
+						comment={comment}
+						editingId={editingId}
+						setEditingId={setEditingId}
+						updatePostCommments={updatePostCommments}
+					/>
 				);
 			})}
 		</>

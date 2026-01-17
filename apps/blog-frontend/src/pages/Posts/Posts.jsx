@@ -19,7 +19,7 @@ const Posts = () => {
 				setPosts();
 			}
 		})();
-	}, []);
+	}, [posts]);
 
 	return (
 		<>
