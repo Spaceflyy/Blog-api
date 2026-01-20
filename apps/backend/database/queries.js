@@ -7,7 +7,7 @@ exports.createUser = async (
 	lastname,
 	username,
 	password,
-	isAuthor
+	isAuthor,
 ) => {
 	await prisma.user.create({
 		data: {
@@ -46,7 +46,7 @@ exports.editUser = async (
 	lastname,
 	username,
 	password,
-	isAuthor
+	isAuthor,
 ) => {
 	await prisma.user.update({
 		where: { id: userId },
@@ -74,15 +74,7 @@ exports.getPosts = async () => {
 exports.getPostById = async (postId) => {
 	return await prisma.post.findUnique({
 		where: { id: postId },
-		include: {
-			comments: {
-				include: {
-					author: { select: { username: true } },
-					replies: { include: { author: { select: { username: true } } } },
-				},
-				orderBy: { created_at: "desc" },
-			},
-		},
+		include: { author: { select: { username: true } } },
 	});
 };
 
@@ -93,15 +85,16 @@ exports.deleteSinglePost = async (postId) => {
 exports.updatePostById = async (postId, title, content) => {
 	await prisma.post.update({ where: { id: postId }, data: { title, content } });
 };
+
 ////////////COMMENT QUERIES ///////////////////
 
 exports.addNewComment = async (
 	postId,
 	authorId,
 	content,
-	parentCommentId = null
+	parentCommentId = null,
 ) => {
-	await prisma.comment.create({
+	return await prisma.comment.create({
 		data: { parentId: postId, parentCommentId, content, authorId },
 	});
 };
@@ -112,6 +105,14 @@ exports.updateComment = async (id, content) => {
 
 exports.deleteSingleComment = async (id) => {
 	await prisma.comment.delete({ where: { id } });
+};
+
+exports.getCommentsByPost = async (parentId) => {
+	return await prisma.comment.findMany({
+		where: { parentId },
+		include: { author: { select: { username: true } } },
+		orderBy: { created_at: "desc" },
+	});
 };
 ////////////TOKEN QUERIES ///////////////////
 exports.addToken = async (userId, token) => {

@@ -1,20 +1,25 @@
 import { newComment } from "../../api/auth";
 import { useUserContext } from "../../../../shared/userContext/userContext";
-
-const CommentForm = ({ postId }) => {
+import { useState } from "react";
+const CommentForm = ({ addNewPostComment, postId }) => {
 	const { user } = useUserContext();
+	const [inputValue, setInputValue] = useState();
 
 	const handleSubmit = async (e) => {
-		const comment = document.getElementById("leaveComment");
 		e.preventDefault();
-		if (comment.value.trim().length > 0) {
-			await newComment(postId, user.id, comment.value);
+		if (inputValue.trim().length > 0) {
+			const res = await newComment(postId, user.id, inputValue);
+			console.log(`DB call ${JSON.stringify(res)}`);
 		}
 	};
 	return (
 		<form method="POST" onSubmit={handleSubmit}>
 			<label htmlFor="leaveComment"></label>
 			<textarea
+				onChange={(e) => {
+					setInputValue(e.target.value);
+				}}
+				value={inputValue}
 				name="leaveComment"
 				id="leaveComment"
 				placeholder="Leave a Comment..."></textarea>

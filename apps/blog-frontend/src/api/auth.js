@@ -53,7 +53,7 @@ export const newComment = async (
 	postId,
 	authorId,
 	content,
-	parentCommentId
+	parentCommentId,
 ) => {
 	return await fetch(`http://localhost:3000/posts/${postId}/comments/new`, {
 		method: "POST",
@@ -65,7 +65,7 @@ export const newComment = async (
 			parentCommentId,
 		}),
 	}).then(async function (response) {
-		return { status: response.status };
+		return { status: response.status, comment: await response.json() };
 	});
 };
 
@@ -79,7 +79,7 @@ export const updateComment = async (commentId, content) => {
 			body: JSON.stringify({
 				content,
 			}),
-		}
+		},
 	).then(async function (response) {
 		return { status: response.status };
 	});
@@ -92,7 +92,7 @@ export const deleteComment = async (commentId) => {
 			method: "DELETE",
 			headers: { "Content-Type": "application/json" },
 			credentials: "include",
-		}
+		},
 	).then(async function (response) {
 		return { status: response.status };
 	});

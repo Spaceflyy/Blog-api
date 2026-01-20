@@ -1,24 +1,27 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState } from "react";
-import { newComment, deleteComment } from "../../api/auth";
+import { newComment } from "../../api/auth";
 import { useUserContext } from "../../../../shared/userContext/userContext";
 import CommentEditor from "../CommentEditor/CommentEditor";
+import ReplyForm from "../ReplyForm/ReplyForm";
+import CommentButtons from "../CommentButtons/CommentButtons";
 
-const Comment = ({ comment, editingId, setEditingId, updatePostCommments }) => {
+const Comment = ({
+	comment,
+	editingId,
+	setEditingId,
+	setReplyingId,
+	replyingId,
+	updatePostComments,
+	removeComment,
+}) => {
 	const { user } = useUserContext();
 	const [viewReplying, setViewReplying] = useState(false);
 
 	const [replying, setReplying] = useState();
 
 	const isEditing = editingId === comment.id;
-	const navigate = useNavigate();
-
-	const handleDelete = async (commentId) => {
-		const res = await deleteComment(commentId);
-		if (res.status === 200) {
-			navigate(0);
-		}
-	};
+	const isReplying = replyingId === comment.id;
 
 	const handleReply = async (e) => {
 		e.preventDefault();
@@ -35,50 +38,22 @@ const Comment = ({ comment, editingId, setEditingId, updatePostCommments }) => {
 			<h3>{comment.created_at}</h3>
 			{isEditing ? (
 				<CommentEditor
-					updatePostCommments={updatePostCommments}
+					updatePostComments={updatePostComments}
 					comment={comment}
 					setEditingId={setEditingId}
 				/>
 			) : (
 				<p>{comment.content}</p>
 			)}
-
-			{replying === comment.id ? (
-				<>
-					<input type="text" id="reply" placeholder="Write a reply..." />
-					<button onClick={handleReply}>Reply</button>
-					<button
-						onClick={() => {
-							setReplying();
-						}}>
-						Close
-					</button>
-				</>
+			{isReplying ? (
+				<ReplyForm setReplyingId={setReplyingId} handleReply={handleReply} />
 			) : (
-				<>
-					<Link
-						onClick={() => {
-							setReplying(comment.id);
-						}}>
-						Reply
-					</Link>
-					{comment.authorId === user?.id && (
-						<>
-							<button
-								onClick={() => {
-									setEditingId(comment.id);
-								}}>
-								Edit
-							</button>
-							<button
-								onClick={() => {
-									handleDelete(comment.id);
-								}}>
-								Delete
-							</button>
-						</>
-					)}
-				</>
+				<CommentButtons
+					setReplyingId={setReplyingId}
+					setEditingId={setEditingId}
+					comment={comment}
+					removeComment={removeComment}
+				/>
 			)}
 
 			{comment.replies?.length > 0 && viewReplying === false ? (
@@ -96,7 +71,10 @@ const Comment = ({ comment, editingId, setEditingId, updatePostCommments }) => {
 							comment={reply}
 							editingId={editingId}
 							setEditingId={setEditingId}
-							updatePostCommments={updatePostCommments}
+							setReplyingId={setReplyingId}
+							replyingId={replyingId}
+							updatePostComments={updatePostComments}
+							removeComment={removeComment}
 						/>
 					);
 				})

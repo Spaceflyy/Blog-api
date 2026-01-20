@@ -6,6 +6,7 @@ import Comment from "../../componenets/Comment/Comment";
 const Post = () => {
 	const [post, setPost] = useState();
 	const [editingId, setEditingId] = useState(null);
+	const [replyingId, setReplyingId] = useState(null);
 
 	const { id } = useParams();
 
@@ -27,7 +28,7 @@ const Post = () => {
 		})();
 	}, [id]);
 
-	const updatePostCommments = (newComment) => {
+	const updatePostComments = (newComment) => {
 		setPost((prevPost) => ({
 			...prevPost,
 
@@ -36,12 +37,29 @@ const Post = () => {
 			}),
 		}));
 	};
+
+	const removeComment = (commentId) => {
+		setPost((prevPost) => ({
+			...prevPost,
+			comments: prevPost.comments.filter((comment) => {
+				return comment.id !== commentId;
+			}),
+		}));
+	};
+
+	const addNewPostComment = (newComment) => {
+		setPost((prevPost) => ({
+			...prevPost,
+			comments: [...prevPost.comments, { newComment }],
+		}));
+	};
+
 	return (
 		<>
 			<h1>{post?.title}</h1>
 			<span dangerouslySetInnerHTML={{ __html: post?.content }} />
 
-			<CommentForm postId={id} />
+			<CommentForm addNewPostComment={addNewPostComment} postId={id} />
 			<h2>{post?.comments.length} Comments</h2>
 
 			{post?.comments.map((comment) => {
@@ -53,8 +71,12 @@ const Post = () => {
 						key={comment.id}
 						comment={comment}
 						editingId={editingId}
+						replyingId={replyingId}
 						setEditingId={setEditingId}
-						updatePostCommments={updatePostCommments}
+						setReplyingId={setReplyingId}
+						updatePostComments={updatePostComments}
+						removeComment={removeComment}
+						addNewPostComment={addNewPostComment}
 					/>
 				);
 			})}

@@ -23,7 +23,29 @@ exports.getAllPosts = async (req, res) => {
 
 exports.getSinglePost = async (req, res) => {
 	const { postId } = req.params;
-	return res.status(200).send(await db.getPostById(Number(postId)));
+	const postInfo = await db.getPostById(Number(postId));
+	const commentInfo = await db.getCommentsByPost(Number(postId));
+
+	const commentsMap = new Map();
+	const comments = [];
+
+	commentInfo.map((comment) => {
+		commentsMap.set(comment.id, { ...comment, replies: [] });
+	});
+
+	commentInfo.map((comment) => {
+		if (comment.parentCommentId) {
+			commentsMap
+				.get(comment.parentCommentId)
+				?.replies.push(commentsMap.get(comment.id));
+		} else {
+			comments.push(commentsMap.get(comment.id));
+		}
+	});
+
+	const post = { ...postInfo, comments: comments };
+
+	return res.status(200).send(post);
 };
 
 exports.editSinglePost = async (req, res) => {
@@ -38,18 +60,14 @@ exports.editSinglePost = async (req, res) => {
 exports.addComment = async (req, res) => {
 	const { postId } = req.params;
 	const { content, authorId, parentCommentId } = req.body;
-	console.log({ postId, authorId, content, parentCommentId });
+	const newcomment = await db.addNewComment(
+		Number(postId),
+		Number(authorId),
+		content,
+		Number(parentCommentId),
+	);
 
-	return res
-		.status(200)
-		.send(
-			await db.addNewComment(
-				Number(postId),
-				Number(authorId),
-				content,
-				Number(parentCommentId)
-			)
-		);
+	return res.status(200).json({ comment: newcomment });
 };
 
 exports.editComment = async (req, res) => {
