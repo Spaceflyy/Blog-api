@@ -7,6 +7,7 @@ import ReplyForm from "../ReplyForm/ReplyForm";
 import CommentButtons from "../CommentButtons/CommentButtons";
 
 const Comment = ({
+	postId,
 	comment,
 	editingId,
 	setEditingId,
@@ -14,22 +15,32 @@ const Comment = ({
 	replyingId,
 	updatePostComments,
 	removeComment,
+	addNewPostComment,
 }) => {
 	const { user } = useUserContext();
 	const [viewReplying, setViewReplying] = useState(false);
-
-	const [replying, setReplying] = useState();
 
 	const isEditing = editingId === comment.id;
 	const isReplying = replyingId === comment.id;
 
 	const handleReply = async (e) => {
 		e.preventDefault();
+
 		const commentInput = document.getElementById("reply");
+
 		if (commentInput.value.trim().length > 0) {
-			await newComment(null, user.id, commentInput.value, replying);
+			const res = await newComment(
+				postId,
+				user.id,
+				commentInput.value,
+				replyingId,
+			);
+			const { comment } = res;
+			comment.author = user.username;
+
+			addNewPostComment(comment);
 		}
-		setReplying();
+		setReplyingId();
 	};
 
 	return (
@@ -75,6 +86,8 @@ const Comment = ({
 							replyingId={replyingId}
 							updatePostComments={updatePostComments}
 							removeComment={removeComment}
+							addNewPostComment={addNewPostComment}
+							postId={postId}
 						/>
 					);
 				})

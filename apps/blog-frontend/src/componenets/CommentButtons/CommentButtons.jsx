@@ -11,6 +11,7 @@ const CommentButtons = ({
 
 	const handleDelete = async (commentId) => {
 		const res = await deleteComment(commentId);
+
 		if (res.status === 200) {
 			removeComment(commentId);
 		}

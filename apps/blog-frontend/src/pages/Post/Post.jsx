@@ -38,19 +38,48 @@ const Post = () => {
 		}));
 	};
 
+	const findRemoveComment = (comments, commentId) => {
+		return comments
+			.filter((comment) => comment.id !== commentId)
+			.map((comment) => ({
+				...comment,
+				...(comment.replies && {
+					replies: findRemoveComment(comment.replies, commentId),
+				}),
+			}));
+	};
+
+	const recursiveAddComment = (comments, newComment) => {
+		return comments.map((comment) => {
+			if (comment.id === newComment.parentCommentId) {
+				return { ...comment, replies: [newComment, ...(comment.replies || [])] };
+			}
+
+			return {
+				...comment,
+				...(comment.replies && {
+					replies: recursiveAddComment(comment.replies, newComment),
+				}),
+			};
+		});
+	};
+
 	const removeComment = (commentId) => {
 		setPost((prevPost) => ({
 			...prevPost,
-			comments: prevPost.comments.filter((comment) => {
-				return comment.id !== commentId;
-			}),
+			comments: findRemoveComment(prevPost.comments, commentId),
 		}));
 	};
 
 	const addNewPostComment = (newComment) => {
+		//find parent comment with parentcommentId
+		//add comment to replies array
+
 		setPost((prevPost) => ({
 			...prevPost,
-			comments: [...prevPost.comments, { newComment }],
+			comments: newComment.parentCommentId
+				? recursiveAddComment(prevPost.comments, newComment)
+				: [newComment, ...prevPost.comments],
 		}));
 	};
 
@@ -68,6 +97,7 @@ const Post = () => {
 				}
 				return (
 					<Comment
+						postId={post.id}
 						key={comment.id}
 						comment={comment}
 						editingId={editingId}

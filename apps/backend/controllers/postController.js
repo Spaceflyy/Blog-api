@@ -67,7 +67,7 @@ exports.addComment = async (req, res) => {
 		Number(parentCommentId),
 	);
 
-	return res.status(200).json({ comment: newcomment });
+	return res.status(200).json(newcomment);
 };
 
 exports.editComment = async (req, res) => {

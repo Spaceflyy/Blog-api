@@ -9,7 +9,12 @@ const CommentForm = ({ addNewPostComment, postId }) => {
 		e.preventDefault();
 		if (inputValue.trim().length > 0) {
 			const res = await newComment(postId, user.id, inputValue);
-			console.log(`DB call ${JSON.stringify(res)}`);
+			const { comment } = res;
+			comment.author = { username: user.username };
+
+			if (res.status === 200) {
+				addNewPostComment(comment);
+			}
 		}
 	};
 	return (

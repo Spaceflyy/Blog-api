@@ -88,12 +88,7 @@ exports.updatePostById = async (postId, title, content) => {
 
 ////////////COMMENT QUERIES ///////////////////
 
-exports.addNewComment = async (
-	postId,
-	authorId,
-	content,
-	parentCommentId = null,
-) => {
+exports.addNewComment = async (postId, authorId, content, parentCommentId) => {
 	return await prisma.comment.create({
 		data: { parentId: postId, parentCommentId, content, authorId },
 	});
