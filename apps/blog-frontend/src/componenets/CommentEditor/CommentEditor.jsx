@@ -1,14 +1,16 @@
 import { updateComment } from "../../api/auth";
+import { useCommentContext } from "../../../../shared/commentContext/CommentContext";
 import { useState } from "react";
 
-const CommentEditor = ({ comment, updatePostComments, setEditingId }) => {
+const CommentEditor = ({ comment }) => {
+	const { setEditingId, updatePostComment } = useCommentContext();
 	const [inputValue, setInputValue] = useState(comment.content);
 	const handleSumbit = async (e) => {
 		e.preventDefault();
 		if (inputValue.trim().length > 0) {
 			await updateComment(comment.id, inputValue);
 
-			updatePostComments({ ...comment, content: inputValue });
+			updatePostComment({ ...comment, content: inputValue });
 			setEditingId(null);
 		}
 	};

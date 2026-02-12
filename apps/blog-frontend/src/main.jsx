@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import CommentProvider from "../../shared/commentContext/CommentContext.jsx";
 import "./index.css";
 import App from "./App.jsx";
 import Posts from "./pages/Posts/Posts.jsx";
@@ -21,7 +22,14 @@ const router = createBrowserRouter([
 				path: "signup",
 				element: <Signup />,
 			},
-			{ path: "/posts/:id", element: <Post /> },
+			{
+				path: "/posts/:id",
+				element: (
+					<CommentProvider>
+						<Post />
+					</CommentProvider>
+				),
+			},
 		],
 	},
 ]);
@@ -29,5 +37,5 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
 	<StrictMode>
 		<RouterProvider router={router} />
-	</StrictMode>
+	</StrictMode>,
 );

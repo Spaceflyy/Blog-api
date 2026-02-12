@@ -1,8 +1,10 @@
 import { newComment } from "../../api/auth";
 import { useUserContext } from "../../../../shared/userContext/userContext";
+import { useCommentContext } from "../../../../shared/commentContext/CommentContext";
 import { useState } from "react";
-const CommentForm = ({ addNewPostComment, postId }) => {
+const CommentForm = ({ postId }) => {
 	const { user } = useUserContext();
+	const { addPostComment } = useCommentContext();
 	const [inputValue, setInputValue] = useState();
 
 	const handleSubmit = async (e) => {
@@ -13,7 +15,7 @@ const CommentForm = ({ addNewPostComment, postId }) => {
 			comment.author = { username: user.username };
 
 			if (res.status === 200) {
-				addNewPostComment(comment);
+				addPostComment(comment);
 			}
 		}
 	};
