@@ -1,9 +1,13 @@
 const db = require("../database/queries");
-
+const CustomNotFoundError = require("../../shared/Error/CustomNotFoundError");
 exports.addPost = async (req, res, next) => {
 	const { authorId, title, content } = req.body;
 	try {
-		await db.createPost(authorId, title, content);
+		const post = await db.createPost(authorId, title, content);
+
+		if (!post) {
+			//throw error here
+		}
 	} catch (error) {
 		next(error);
 	}
@@ -14,6 +18,7 @@ exports.deletePost = async (req, res) => {
 	const { postId } = req.params;
 
 	await db.deleteSinglePost(Number(postId));
+
 	return res.status(200).json("success!");
 };
 
@@ -21,10 +26,15 @@ exports.getAllPosts = async (req, res) => {
 	return res.send(await db.getPosts());
 };
 
-exports.getSinglePost = async (req, res) => {
+exports.getSinglePost = async (req, res, next) => {
 	const { postId } = req.params;
-	const postInfo = await db.getPostById(Number(postId));
-	const commentInfo = await db.getCommentsByPost(Number(postId));
+
+	const postInfo = undefined;
+	const commentInfo = undefined;
+
+	if (!postInfo || !commentInfo) {
+		throw new CustomNotFoundError("Post not found!", 404);
+	}
 
 	const commentsMap = new Map();
 	const comments = [];

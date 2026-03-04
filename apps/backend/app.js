@@ -11,7 +11,7 @@ app.use(
 	cors({
 		origin: ["http://localhost:5173", "http://localhost:5174"],
 		credentials: true,
-	})
+	}),
 );
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -19,6 +19,10 @@ app.use(passport.initialize());
 app.use("/users", userRouter);
 app.use("/auth", authRouter);
 app.use("/posts", postRouter);
+app.use((err, req, res, next) => {
+	console.error(err);
+	res.status(err.statusCode || 500).send(err.message);
+});
 
 app.listen(3000, () => {
 	console.log("App is now listening on port 3000");

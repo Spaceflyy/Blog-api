@@ -1,5 +1,6 @@
 const db = require("../database/queries");
 const bcrypt = require("bcryptjs");
+const CustomNotFoundError = require("../../shared/Error/CustomNotFoundError");
 
 exports.addUser = async (req, res, next) => {
 	const { firstname, lastname, username, password, email, isAuthor } = req.body;
@@ -11,7 +12,7 @@ exports.addUser = async (req, res, next) => {
 			lastname,
 			username,
 			hashedPassword,
-			isAuthor
+			isAuthor,
 		);
 	} catch (error) {
 		next(error);
@@ -25,7 +26,9 @@ exports.getAllUsers = async (req, res) => {
 
 exports.getUserById = async (req, res) => {
 	const { userId } = req.params;
-	return res.send(await db.getUserId(Number(userId)));
+	const user = await db.getUserId(Number(userId));
+
+	return res.status(200).send(user);
 };
 
 exports.deleteUserById = async (req, res) => {
@@ -45,11 +48,10 @@ exports.updateUser = async (req, res) => {
 			lastname,
 			username,
 			hashedPassword,
-			isAuthor
+			isAuthor,
 		);
 		res.end();
 	} catch (error) {
-		console.error(error);
 		next(error);
 	}
 };

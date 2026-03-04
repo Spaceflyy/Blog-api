@@ -9,11 +9,13 @@ import Signup from "./pages/Signup/Signup.jsx";
 import LoginPage from "./pages/Login/LoginPage.jsx";
 import Home from "./pages/Home/Home.jsx";
 import Post from "./pages/Post/Post.jsx";
+import ErrorPage from "../../shared/Error/ErrorPage.jsx";
 
 const router = createBrowserRouter([
 	{
 		path: "/",
 		element: <App />,
+		errorElement: <ErrorPage />,
 		children: [
 			{ path: "/", element: <Home /> },
 			{ path: "posts", element: <Posts /> },

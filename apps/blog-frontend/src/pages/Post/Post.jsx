@@ -4,8 +4,11 @@ import { useCommentContext } from "../../../../shared/commentContext/CommentCont
 import CommentForm from "../../componenets/CommentForm/CommentForm";
 
 import Comment from "../../componenets/Comment/Comment";
+import { useState } from "react";
 const Post = () => {
 	const { post, setPost } = useCommentContext();
+	const [loading, setLoading] = useState();
+	const [error, setError] = useState();
 
 	const { id } = useParams();
 

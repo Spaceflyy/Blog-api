@@ -62,7 +62,7 @@ exports.editUser = async (
 
 //////////POST QUERIES///////////////////////////////
 exports.createPost = async (authorId, title, content) => {
-	await prisma.post.create({ data: { authorId, title, content } });
+	return await prisma.post.create({ data: { authorId, title, content } });
 };
 
 exports.getPosts = async () => {
