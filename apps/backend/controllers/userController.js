@@ -1,6 +1,6 @@
 const db = require("../database/queries");
 const bcrypt = require("bcryptjs");
-const CustomNotFoundError = require("../../shared/Error/CustomNotFoundError");
+const CustomNotFoundError = require("../../shared/Error/AppError");
 
 exports.addUser = async (req, res, next) => {
 	const { firstname, lastname, username, password, email, isAuthor } = req.body;

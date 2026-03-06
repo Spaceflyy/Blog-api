@@ -62,7 +62,7 @@ exports.editUser = async (
 
 //////////POST QUERIES///////////////////////////////
 exports.createPost = async (authorId, title, content) => {
-	return await prisma.post.create({ data: { authorId, title, content } });
+	await prisma.post.create({ data: { authorId, title, content } });
 };
 
 exports.getPosts = async () => {
@@ -79,7 +79,7 @@ exports.getPostById = async (postId) => {
 };
 
 exports.deleteSinglePost = async (postId) => {
-	await prisma.post.delete({ where: { id: postId } });
+	return await prisma.post.delete({ where: { id: postId } });
 };
 
 exports.updatePostById = async (postId, title, content) => {

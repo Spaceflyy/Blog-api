@@ -1,39 +1,50 @@
 const db = require("../database/queries");
-const CustomNotFoundError = require("../../shared/Error/CustomNotFoundError");
-exports.addPost = async (req, res, next) => {
-	const { authorId, title, content } = req.body;
-	try {
-		const post = await db.createPost(authorId, title, content);
+const AppError = require("../../shared/Error/AppError");
 
-		if (!post) {
-			//throw error here
-		}
-	} catch (error) {
-		next(error);
+exports.addPost = async (req, res) => {
+	const { authorId, title, content } = req.body;
+	if (!authorId || !title) {
+		throw new AppError(
+			"Bad Request Error",
+			"Required Information is missing!",
+			400,
+		);
 	}
+
+	await db.createPost(authorId, title, content);
+
 	return res.status(200).json("success!");
 };
 
 exports.deletePost = async (req, res) => {
-	const { postId } = req.params;
+	const postId = Number(req.params.postId);
 
-	await db.deleteSinglePost(Number(postId));
+	if (!Number.isInteger(postId)) {
+		throw new AppError("Invalid ID", "Invalid post Id!", 400);
+	}
 
-	return res.status(200).json("success!");
+	await db.deleteSinglePost(postId);
+
+	return res.status(200).json("Post deleted successfully");
 };
 
 exports.getAllPosts = async (req, res) => {
-	return res.send(await db.getPosts());
+	const posts = await db.getPosts();
+	// might need to change this as its not really an issue if theres no posts
+	if (!posts) {
+		throw new AppError("Posts not found.", "No posts found", 404);
+	}
+	return res.status(200).send(posts);
 };
 
 exports.getSinglePost = async (req, res, next) => {
 	const { postId } = req.params;
 
-	const postInfo = undefined;
-	const commentInfo = undefined;
+	const postInfo = await db.getPostById(Number(postId));
+	const commentInfo = await db.getCommentsByPost(Number(postId));
 
 	if (!postInfo || !commentInfo) {
-		throw new CustomNotFoundError("Post not found!", 404);
+		throw new AppError("Not Found Error", "Post not found!", 404);
 	}
 
 	const commentsMap = new Map();
@@ -62,33 +73,52 @@ exports.editSinglePost = async (req, res) => {
 	const { postId } = req.params;
 	const { title, content } = req.body;
 
-	return res
-		.status(200)
-		.send(await db.updatePostById(Number(postId), title, content));
+	const result = await db.updatePostById(Number(postId), title, content);
+
+	return res.status(200).send(result);
 };
 
 exports.addComment = async (req, res) => {
 	const { postId } = req.params;
 	const { content, authorId, parentCommentId } = req.body;
-	const newcomment = await db.addNewComment(
+
+	if (!postId || !authorId) {
+		throw new AppError("Invalid ID.", "Invalid post / author ID.", 400);
+	}
+
+	const newComment = await db.addNewComment(
 		Number(postId),
 		Number(authorId),
 		content,
 		Number(parentCommentId),
 	);
 
-	return res.status(200).json(newcomment);
+	if (!newComment) {
+		throw new AppError("Add Comment Failed.", "Failed to add comment.", 500);
+	}
+
+	return res.status(200).json(newComment);
 };
 
 exports.editComment = async (req, res) => {
-	const { commentId } = req.params;
+	const commentId = Number(req.params.commentId);
 	const { content } = req.body;
-	return res
-		.status(200)
-		.send(await db.updateComment(Number(commentId), content));
+
+	if (!Number.isInteger(commentId) || commentId < 0) {
+		throw new AppError("Invalid Id", "Invalid comment ID", 400);
+	}
+
+	const updatedComment = await db.updateComment(commentId, content);
+
+	return res.status(200).send(updatedComment);
 };
 
 exports.deleteComment = async (req, res) => {
-	const { id } = req.params;
-	return res.status(200).send(await db.deleteSingleComment(Number(id)));
+	const id = Number(req.params.id);
+
+	if (!Number.isInteger(id)) {
+		throw new AppError("Invalid Id", "Invalid comment ID", 400);
+	}
+
+	return res.status(200).send(await db.deleteSingleComment(id));
 };

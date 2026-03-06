@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 const Posts = () => {
-	const [posts, setPosts] = useState();
+	const [posts, setPosts] = useState([]);
 
 	useEffect(() => {
 		(async () => {
@@ -19,7 +19,7 @@ const Posts = () => {
 				setPosts();
 			}
 		})();
-	}, [posts]);
+	}, []);
 
 	return (
 		<>
